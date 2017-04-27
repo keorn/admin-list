@@ -85,23 +85,24 @@ contract AdminList {
     // MISBEHAVIOUR HANDLING
 
     // Called when a validator should be removed.
-    function reportMalicious(address validator) only_admin {
+    function reportMalicious(address validator, uint blockNumber, bytes proof) only_admin {
         Report(msg.sender, validator, true);
     }
 
     // Report that a validator has misbehaved in a benign way.
-    function reportBenign(address validator) only_admin {
+    function reportBenign(address validator, uint blockNumber) only_admin {
         Report(msg.sender, validator, false);
     }
 
     // MODIFIERS
 
     modifier only_admin() {
-        if (!isAdmin[msg.sender]) throw; _;
+        if (!isAdmin[msg.sender]) { throw; }
+        _;
     }
 
     modifier on_new_block() {
-        if (block.number > lastTransitionBlock) _;
+        if (block.number > lastTransitionBlock) { _; }
     }
 
     // Fallback function throws when called.
